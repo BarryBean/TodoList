@@ -21,4 +21,14 @@ public class TaskController {
     public List<Task> list() {
         return taskService.getAll();
     }
+    
+    @PostMapping(consumes = "application/json", produces = "application/json")
+    public ResponseEntity<Task> create(@RequestBody Task task){
+    	taskService.createTask(task);
+    	URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+    				.path("/{id}")
+    				.buildAndExpand(task.getId())
+    				.toUri();
+    	return ResponseEntity.created(location).build();
+    }
 }
