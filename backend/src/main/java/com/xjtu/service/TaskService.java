@@ -18,5 +18,12 @@ public class TaskService {
     public List<Task> getAll() {
         return store.readTasks();
     }
-
+    
+    public Task createTask(Task task){
+    	List<Task> tasks = new ArrayList<>(store.readTasks());
+    	task.setUpdatedAt();
+    	tasks.add(task);
+    	store.writeTasks(tasks);
+    	return task;
+    }
 }
