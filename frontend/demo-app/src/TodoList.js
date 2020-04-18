@@ -6,7 +6,7 @@ import './main.css';
 class TodoList extends Component {
 	constructor (props) {
 		super(props);
-
+		document.title="TodoList";
 		this.state = {
 			list: [{
 				id: 0,
@@ -38,6 +38,7 @@ class TodoList extends Component {
 		this.state.list.forEach( (item) => {
 			if (item.id === todoItem.id) {
 				item.status = todoItem.status;
+				item.name=todoItem.name;
 			}
 			if (item.status === 1) {
 				sum++;
@@ -68,7 +69,7 @@ class TodoList extends Component {
 		return (
 			<div className="container">
 				<h1>TodoList</h1>
-				<ul>
+				<ul className="task-items">
 					{ this.state.list.map ((item, index) =>
 						<ListItem 
 							item={item}  
