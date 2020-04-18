@@ -33,7 +33,17 @@ public class TaskStore {
         }
         return Collections.emptyList();
     }
-
+    
+    public void writeTasks(List<Task> tasks) {
+        try {
+            FileWriter fileWriter = new FileWriter(getFile().getAbsolutePath());
+            fileWriter.write(getGson().toJson(tasks));
+            fileWriter.flush();
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     private File getFile() {
         if (env.equals("test")) {
