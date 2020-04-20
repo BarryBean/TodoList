@@ -4,50 +4,7 @@ const ListItem = ({item, itemDelete, itemUpdate}) => {
     const [isEditable, setIsEditable] = useState(false);
     const [todoItem, setTodoItem] = useState(item);
 
-//     handleDelete() {
-//         this.props.totalChange(this.props.item);
-//     }
-//
-//     //点击展示输入框
-//     handleChangeClick = () => {
-//         this.setState({
-//             showInput: true
-//         })
-//     };
-// //点击关闭输入框
-//     handleCloseClick = () => {
-//         this.setState({
-//             showInput: !this.state.showInput
-//         })
-//     };
-//
-// //点击确定按钮
-//     handleAffirmClick = () => {
-//         var obj = {
-//             id: this.props.item.id,
-//             content: this.state.valueCon,
-//         }
-//         console.log(obj);
-//         this.props.finishedChange(obj);
-//         //关闭输入框
-//         this.setState({
-//             showInput: this.props.isShow
-//         })
-//     };
-// //input改变
-//     handleChange = (e) => {
-//         this.setState({
-//             valueCon: e.target.value
-//         })
-//     };
-//
-//     componentDidMount() {
-//         this.setState({
-//             valueCon: this.props.value,
-//         })
-//     }
 
-    //设置item样式
     const unfinish = {
         backgroundColor: '#DFFCB5',
         color: '#2EB872',
