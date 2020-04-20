@@ -8,9 +8,9 @@ import java.time.LocalDateTime;
 @Component
 @Data
 public class Task {
-    private long id;
-    private String content;
-    private LocalDateTime updatedAt;
+    private long id;     //identity
+    private String content;    //information
+    private LocalDateTime updatedAt;  //time
 
     public Task() {
     }
