@@ -2,6 +2,7 @@ package com.xjtu.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -51,5 +52,17 @@ public class TaskServiceTest {
     	Task task = taskService.createTask(new Task(3L, "new"));
     	assertNotNull(task.getUpdatedAt());
     	verify(taskStore).writeTasks(any());
+    }
+
+    @Test
+    public void shouldFindTask() {
+        tasks.add(new Task(1L, "task"));
+        when(taskStore.readTasks()).thenReturn(tasks);
+
+        Optional<Task> optionalTask = taskService.find(1L);
+
+        Task task = optionalTask.get();
+        assertEquals(1L, task.getId());
+        assertEquals("task", task.getContent());
     }
 }
