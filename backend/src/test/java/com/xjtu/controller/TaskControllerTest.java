@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -57,11 +58,37 @@ public class TaskControllerTest {
 	}
 	
 	@Test
+    public void shouldReturnNotFoundWhenFindByIdIfNotPresent() throws Exception {
+        when(service.find(3L)).thenReturn(Optional.empty());
+        this.mockMvc.perform(get("/api/tasks/3")).andDo(print()).andExpect(status().isNotFound());
+    }
+	
+	@Test
 	public void shouldCreateTask() throws Exception{
 		Task task = new Task(1L, "new");
 		Task createTask = new Task(1L, "new");
 		when(service.createTask(task)).thenReturn(createTask);
 		this.mockMvc.perform(post("/api/tasks").contentType(MediaType.APPLICATION_JSON).content(new Gson().toJson(task)))
 			.andDo(print()).andExpect(status().isCreated());
+	}
+	
+	@Test
+	public void shouldUpdateTaskById() throws Exception{
+		Task task = new Task(1L, "task");
+		Task update = new Task(1L, "update");
+		when(service.update(any())).thenReturn(Optional.of(update));
+		
+		this.mockMvc.perform(put("/api/tasks/1").contentType(MediaType.APPLICATION_JSON).content(new Gson().toJson(task)))
+					.andDo(print()).andExpect(status().isOk())
+					.andExpect(jsonPath("$.content").value("update"));
+			
+	}
+	
+	@Test
+	public void shouldReturnNotFoundWhenUpdateTaskButDoesNotExist() throws Exception{
+		Task task = new Task(1L, "task");
+		when(service.update(any())).thenReturn(Optional.empty());
+		this.mockMvc.perform(put("/api/tasks/1").contentType(MediaType.APPLICATION_JSON).content(new Gson().toJson(task)))
+					.andDo(print()).andExpect(status().isNotFound());
 	}
 }
