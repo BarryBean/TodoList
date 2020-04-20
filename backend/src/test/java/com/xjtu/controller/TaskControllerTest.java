@@ -71,6 +71,18 @@ public class TaskControllerTest {
 		this.mockMvc.perform(post("/api/tasks").contentType(MediaType.APPLICATION_JSON).content(new Gson().toJson(task)))
 			.andDo(print()).andExpect(status().isCreated());
 	}
+
+	@Test
+	public void shouldDeleteWhenExist() throws Exception {
+		when(service.delete(2L)).thenReturn(Optional.of(new Task(2L, "B")));
+		this.mockMvc.perform(delete("/api/tasks/2")).andDo(print()).andExpect(status().isNoContent());
+	}
+
+	@Test
+	public void shouldReturnNotFoundWhenDeleteIfNotPresent() throws Exception {
+		when(service.delete(2L)).thenReturn(Optional.empty());
+		this.mockMvc.perform(delete("/api/tasks/2")).andDo(print()).andExpect(status().isNotFound());
+	}
 	
 	@Test
 	public void shouldUpdateTaskById() throws Exception{
