@@ -37,4 +37,10 @@ TaskController {
     				.toUri();
     	return ResponseEntity.created(location).build();
     }
+    
+    @PutMapping(path = "/{id}", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<Task> update(@PathVariable Long id, @RequestBody Task task) {
+        Optional<Task> updatedTask = taskService.update(new Task(id, task.getContent()));
+        return ResponseEntity.of(updatedTask);
+    }
 }
