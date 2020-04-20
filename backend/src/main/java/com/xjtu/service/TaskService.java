@@ -18,6 +18,10 @@ public class TaskService {
     public List<Task> getAll() {
         return store.readTasks();
     }
+
+    public Optional<Task> find(Long id) {
+        return store.readTasks().stream().filter(task -> task.getId() == id).findAny();
+    }
     
     public Task createTask(Task task){
     	List<Task> tasks = new ArrayList<>(store.readTasks());
