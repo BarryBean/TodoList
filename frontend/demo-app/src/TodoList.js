@@ -1,88 +1,132 @@
-import React, { Component } from 'react';
+import React, {Component, useEffect, useState, Fragment} from 'react';
 import ListItem from './ListItem';
-import Dialog from './Dialog';
+import {getTodos, addTodo, deleteTodo, updateTodo} from "./api/TodoApi";
 import './main.css';
+import _ from "lodash";
 
-class TodoList extends Component {
-	constructor (props) {
-		super(props);
-		document.title="TodoList";
-		this.state = {
-			list: [{
-				id: 0,
-				name: '找个日常实习',
-				status: 0
-			}, {
-				id: 1,
-				name: '待到明年1月',
-				status: 0
-			}, {
-				id: 2,
-				name: '再来看看春招',
-				status : 0
-			}],
-			finished: 0
-		};
-	}
+const TodoList = () => {
+    const [inputValue, setInputValue] = useState("");
+    const [list, setList] = useState(null);
+    const [error, setError] = useState("");
 
-	addTask (newitem) {
-		var allTask = this.state.list;
-		allTask.push(newitem);
-		this.setState({
-			list: allTask
-		});
-	}
+    const handleLoadTasks = () => {
+        getTodos()
+            .then((response) => {
+                setList(response);
+            })
+            .catch((error) => {
+                setError("Unable to retrieve todo's");
+            });
+    };
 
-	updateFinished (todoItem) {
-		var sum = 0;
-		this.state.list.forEach( (item) => {
-			if (item.id === todoItem.id) {
-				item.status = todoItem.status;
-				item.name=todoItem.name;
-			}
-			if (item.status === 1) {
-				sum++;
-			}
-		});
-		this.setState({
-			finished: sum
-		});
-	}
+    const handleAddTask = () => {
+        if (inputValue === "") return;
 
-	updateTotal (todoItem) {
-		var obj = [], sum = 0;
-		this.state.list.forEach((item) => {
-			if (item.id !== todoItem.id) {
-				obj.push(item);
-				if (item.status === 1 ) {
-					sum++;
-				}
-			}
-		});
-		this.setState({
-			list: obj,
-			finished: sum
-		});
-	}
+        const newTask = {
+            id: _.parseInt(list.length ? list[list.length - 1].id : 0) + 1,
+            content: inputValue,
+        };
 
-	render () {
-		return (
-			<div className="container">
-				<h1>TodoList</h1>
-				<ul className="task-items">
-					{ this.state.list.map ((item, index) =>
-						<ListItem 
-							item={item}  
-							finishedChange={this.updateFinished.bind(this)} 
-							totalChange={this.updateTotal.bind(this)}
-							key={index}
-						/>
-					)}
-				</ul>
-				<Dialog addNewTask={this.addTask.bind(this)} nums={this.state.list.length}/>
-			</div>
-		);
-	}
-}
+        addTodo(newTask).then(() => {
+            setList([...list, newTask]);
+            setInputValue("");
+        });
+    };
+
+    const handleDeleteTask = (id) =>
+        deleteTodo(id).then(() => {
+            setList(list.filter((item) => item.id !== id));
+        });
+
+    const handleUpdateTask = (task) => {
+        if (task.content === "") return;
+
+        updateTodo(task).then((response) => {
+            setList(
+                list.map((x) => (x.id === response.id ? {...x, ...response} : x))
+            );
+        });
+    };
+
+    useEffect(() => {
+        handleLoadTasks();
+    }, []);
+
+    if (list === null) {
+        return <div>Tasks is loading ...</div>;
+    }
+
+    if (error) {
+        return <div>{error}</div>;
+    }
+
+    // addTask(newitem)
+    // {
+    //     var allTask = this.state.list;
+    //     allTask.push(newitem);
+    //     this.setState({
+    //         list: allTask
+    //     });
+    // }
+    //
+    // updateFinished(todoItem)
+    // {
+    //     var sum = 0;
+    //     this.state.list.forEach((item) => {
+    //         if (item.id === todoItem.id) {
+    //             item.content = todoItem.content;
+    //         }
+    //         sum++;
+    //     });
+    //     this.setState({
+    //         finished: sum
+    //     });
+    // }
+    //
+    // updateTotal(todoItem)
+    // {
+    //     var obj = [], sum = 0;
+    //     this.state.list.forEach((item) => {
+    //         if (item.id !== todoItem.id) {
+    //             obj.push(item);
+    //             sum++;
+    //         }
+    //     });
+    //     this.setState({
+    //         list: obj,
+    //         finished: sum
+    //     });
+    // }
+
+
+    return (
+        <div className="container">
+            <h1>TodoList</h1>
+            <ul className="task-items">
+                {list.map((item) =>
+                    <ListItem
+                        item={item}
+                        key={item.id}
+                        index={item.id}
+                        itemDelete={handleDeleteTask}
+                        itemUpdate={handleUpdateTask}
+                        // finishedChange={this.updateFinished.bind(this)}
+                        // totalChange={this.updateTotal.bind(this)}
+                    />
+                )}
+            </ul>
+            <div className="dialog">
+                <div>
+                    <h3>添加</h3>
+                    <input type="text" className="task-input" value={inputValue}
+                           onChange={(e) => setInputValue(e.target.value)} placeholder="请输入"/>
+                </div>
+                <div>
+                    <input type="button" className="submit-button" data-testid="add-button" value="提交" onClick={handleAddTask}/>
+                </div>
+            </div>
+        </div>
+    );
+};
 
 export default TodoList;
