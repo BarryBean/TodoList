@@ -43,4 +43,13 @@ TaskController {
         Optional<Task> updatedTask = taskService.update(new Task(id, task.getContent()));
         return ResponseEntity.of(updatedTask);
     }
+
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity delete(@PathVariable Long id) {
+        Optional<Task> deletedTask = taskService.delete(id);
+        if (deletedTask.isPresent()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
 }

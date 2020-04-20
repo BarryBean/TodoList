@@ -99,4 +99,26 @@ public class TaskServiceTest {
     	assertFalse(optionalTask.isPresent());
     	verify(taskStore, new Times(0)).writeTasks(any());
     }
+
+    @Test
+    public void shouldDeleteTask() {
+        tasks.add(new Task(1L, "task"));
+        when(taskStore.readTasks()).thenReturn(tasks);
+
+        Optional<Task> optionalTask = taskService.delete(1L);
+
+        Task task = optionalTask.get();
+        assertEquals(1L, task.getId());
+        verify(taskStore).writeTasks(any());
+    }
+
+    @Test
+    public void shouldNotDeleteTaskWhenNotExist() {
+        when(taskStore.readTasks()).thenReturn(tasks);
+
+        Optional<Task> optionalTask = taskService.delete(1L);
+
+        assertFalse(optionalTask.isPresent());
+        verify(taskStore, new Times(0)).writeTasks(any());
+    }
 }
