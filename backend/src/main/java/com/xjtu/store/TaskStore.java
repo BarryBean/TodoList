@@ -27,7 +27,8 @@ public class TaskStore {
             String contents = new String(Files.readAllBytes(getFile().toPath()));
             Task[] tasks = getGson().fromJson(contents, Task[].class);
             return Arrays.asList(tasks);
-        } catch (IOException e) {
+            } catch (IOException e)
+        {
             e.printStackTrace();
         }
         return Collections.emptyList();
@@ -40,6 +41,7 @@ public class TaskStore {
         }
         return new File(fileName);
     }
+
 
     private Gson getGson() {
         return new GsonBuilder()
