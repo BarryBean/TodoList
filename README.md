@@ -1,28 +1,22 @@
 # TodoList
 XJTU敏捷web开发大作业
 
-## 分组
+## 基础说明
+
+### 分组
 
 组长：毕宇盛
 
 组员：王艺帆，初继波，张雪
 
-## 技术栈
-
-后端：SpringBoot + TDD
-
-前端：ReactJS + e2e
-
-数据使用 Json 文件做存储
-
-## 实现功能
+### 实现功能
 
 - 返回所有Todo任务
 - 创建一个新的Todo任务
 - 返回一个指定ID的Todo任务
 - 删除一个Todo任务
 
-## Json结构
+### Json结构
 
 ```json
 {
@@ -32,7 +26,30 @@ XJTU敏捷web开发大作业
 }
 ```
 
-# 代码提交
+## 使用说明
+
+### 后端
+
+修改`TodoList\backend\src\main\resources\application.properties`中的`todo.store.filename`，修改为相对路径或绝对路径下的`TodoList\data\Tasks.json`文件。
+
+注：`TodoList\data\Tasks.json`使用`/`代替`\`。
+
+### 前端
+
+```shell
+npm run start
+```
+
+### e2e
+
+```shell
+npm install
+npm run test
+```
+
+若无法成功下载，请使用 `cnpm`。
+
+## 代码提交
 
 ### 代码仓库
 
