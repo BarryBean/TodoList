@@ -24,12 +24,28 @@ describe('todo test', function () {
       let originalItemsCount = await page.$$('.task-item').then(item => item.length);
 
       await page.click('.task-input');
-      await page.type('.task-input', newTaskContent, { delay: 50 });
-      await page.click('.add-btn');
-
-      let newTask = await page.waitFor('.task-item .task-item:nth-child(' + (originalItemsCount) + ')');
-      const expectInputContent = await page.evaluate(newTask => newTask.querySelector('label').textContent, newTask);
+      await page.type('.task-input', newTaskContent);
+      await page.click('.submit-button');
+      let newTask = await page.waitFor('.task-items .task-item:nth-child(' + (originalItemsCount + 1) + ')');
+      const expectInputContent = await page.evaluate(newTask => newTask.querySelector('input').value, newTask);
       expect(expectInputContent).to.eql(newTaskContent);
+    });
+  });
+
+  //修改任务
+  describe('edit task', function () {
+    it('should update task', async function () {
+      const updatedContent = 'updated content';
+      await page.waitFor('.task-input');
+      await page.click('.task-items .task-item:last-child .update-btn');
+      const textareaElement = await page.$('.task-item:last-child input');
+      await textareaElement.click({ clickCount: 3 })
+      await textareaElement.type(updatedContent);
+      await page.$eval('.task-item:last-child input', input => input.blur());
+
+      let theLastItem = await page.waitFor('.task-items .task-item:last-child');
+      const expectInputContent = await page.evaluate(task => task.querySelector('input').value, theLastItem);
+      expect(expectInputContent).to.eql(updatedContent);
     });
   });
 
@@ -46,26 +62,6 @@ describe('todo test', function () {
       expect(originalItemsCount - itemsCount).to.eql(1);
     });
   });
-
-
-  //修改任务
-  describe('edit task', function () {
-    it('should update task', async function () {
-      const updatedContent = 'this is a String';
-      const textareaElement = await page.$('.task-item:last-child label');
-      await page.click('.task-items .task-item:last-child .update-btn');
-      await page.click('.task-items .task-item:last-child .write-input .write-input-name');
-      await textareaElement.type(updatedContent);
-      await page.click('.task-items .task-item:last-child .write-input .write-input-hide .write-input-hide-yes');
-      // await page.$eval('.task-item:last-child label', textarea => textarea.blur());
-
-      let theLastItem = await page.waitFor('.task-items .task-item:last-child');
-      const expectInputContent = await page.evaluate(task => task.querySelector('label').textContent, theLastItem);
-      expect(expectInputContent).to.eql(updatedContent);
-    });
-  });
-
-
 
 
 });

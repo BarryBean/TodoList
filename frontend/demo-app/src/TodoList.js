@@ -60,45 +60,6 @@ const TodoList = () => {
         return <div>{error}</div>;
     }
 
-    // addTask(newitem)
-    // {
-    //     var allTask = this.state.list;
-    //     allTask.push(newitem);
-    //     this.setState({
-    //         list: allTask
-    //     });
-    // }
-    //
-    // updateFinished(todoItem)
-    // {
-    //     var sum = 0;
-    //     this.state.list.forEach((item) => {
-    //         if (item.id === todoItem.id) {
-    //             item.content = todoItem.content;
-    //         }
-    //         sum++;
-    //     });
-    //     this.setState({
-    //         finished: sum
-    //     });
-    // }
-    //
-    // updateTotal(todoItem)
-    // {
-    //     var obj = [], sum = 0;
-    //     this.state.list.forEach((item) => {
-    //         if (item.id !== todoItem.id) {
-    //             obj.push(item);
-    //             sum++;
-    //         }
-    //     });
-    //     this.setState({
-    //         list: obj,
-    //         finished: sum
-    //     });
-    // }
-
-
     return (
         <div className="container">
             <h1>TodoList</h1>
